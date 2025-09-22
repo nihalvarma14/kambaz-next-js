@@ -6,7 +6,7 @@ export default function Labs() {
      <h2>Name : Venkata Sai Siva Nihalvarma Pericherla</h2>
      <h2>Section : 18616</h2>
      <h3><a href = "https://github.com/nihalvarma14/kambaz-next-js.git" id = "wd-github">Github repo link</a></h3>
-     <h4><a href= "https://kambaz-next-js-8y4w.vercel.app/Account/Signin" id = ""wd-kambaz>kambaz link</a></h4>
+     <h4><a href= "https://kambaz-next-js-8y4w.vercel.app/Account/Signin" id = "wd-kambaz">kambaz link</a></h4>
      <ul>
        <li>
          <Link href="/Labs/Lab1" id="wd-lab1-link">
