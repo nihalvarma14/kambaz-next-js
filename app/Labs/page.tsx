@@ -3,7 +3,10 @@ export default function Labs() {
  return (
    <div id="wd-labs">
      <h1>Labs</h1>
-     <h2>Venkata Sai Siva Nihalvarma Pericherla</h2>
+     <h2>Name : Venkata Sai Siva Nihalvarma Pericherla</h2>
+     <h2>Section : 18616</h2>
+     <h2>Github repo : https://github.com/nihalvarma14/kambaz-next-js.git</h2>
+     <h2>Kambaz app link : https://kambaz-next-js-8y4w.vercel.app/Account/Signin</h2>
      <ul>
        <li>
          <Link href="/Labs/Lab1" id="wd-lab1-link">
