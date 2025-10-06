@@ -38,7 +38,7 @@ export default function Positions() {
         <h3>Fixed position</h3>
         <div>
           Checkout the blue square that says Fixed position stuck all the way on the right and half
-          way down the page. It doesn't scroll with the rest of the page. Its position is fixed.
+          way down the page. It doesnt scroll with the rest of the page. Its position is fixed.
           <div className="wd-pos-fixed wd-dimension-square wd-bg-color-blue wd-fg-color-white">
             Fixed position
           </div>
