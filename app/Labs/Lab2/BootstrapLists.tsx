@@ -32,7 +32,7 @@ export default function BootstrapLists() {
             2001 A Space Odyssey
           </a>
           <a href="https://en.wikipedia.org/wiki/Ender%27s_Game" className="list-group-item list-group-item-action disabled">
-            Ender's Game
+            Enders Game
           </a>
           <button type="button" className="list-group-item list-group-item-action" onClick={() => alert("New book added")}>
             Add another book
