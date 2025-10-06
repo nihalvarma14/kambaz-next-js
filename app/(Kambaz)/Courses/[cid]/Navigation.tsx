@@ -1,17 +1,40 @@
 import Link from "next/link";
+
 export default function CourseNavigation() {
   return (
-    <div id="wd-courses-navigation">
-      <Link href="/Courses/1234/Home" id="wd-course-home-link">Home</Link><br/>
-      <Link href="/Courses/1234/Modules" id="wd-course-modules-link">Modules
-        </Link><br/>
-      <Link href="/Courses/1234/Piazza" id="wd-course-piazza-link">Piazza</Link><br/>
-      <Link href="/Courses/1234/Zoom" id="wd-course-zoom-link">Zoom</Link><br/>
-      <Link href="/Courses/1234/Assignments" id="wd-course-assignments-link">
-          Assignments</Link><br/>
-      <Link href="/Courses/1234/Quizzes" id="wd-course-quizzes-link">Quizzes
-        </Link><br/>
-      <Link href="/Courses/1234/Grades" id="wd-course-grades-link">Grades</Link><br/>
-      <Link href="/Courses/1234/People/Table" id="wd-course-people-link">People</Link><br/>
+    <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
+      <Link id="wd-course-home-link" href="/Courses/1234/Home"
+            className="list-group-item active border border-0">
+        Home
+      </Link>
+      <Link id="wd-course-modules-link" href="/Courses/1234/Modules"
+            className="list-group-item text-danger border border-0">
+        Modules
+      </Link>
+      <Link id="wd-course-piazza-link" href="/Courses/1234/Piazza"
+            className="list-group-item text-danger border border-0">
+        Piazza
+      </Link>
+      <Link id="wd-course-zoom-link" href="/Courses/1234/Zoom"
+            className="list-group-item text-danger border border-0">
+        Zoom
+      </Link>
+      <Link id="wd-course-assignments-link" href="/Courses/1234/Assignments"
+            className="list-group-item text-danger border border-0">
+        Assignments
+      </Link>
+      <Link id="wd-course-quizzes-link" href="/Courses/1234/Quizzes"
+            className="list-group-item text-danger border border-0">
+        Quizzes
+      </Link>
+      <Link id="wd-course-grades-link" href="/Courses/1234/Grades"
+            className="list-group-item text-danger border border-0">
+        Grades
+      </Link>
+      <Link id="wd-course-people-link" href="/Courses/1234/People"
+            className="list-group-item text-danger border border-0">
+        People
+      </Link>
     </div>
-  );}
+  );
+}
