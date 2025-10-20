@@ -1,4 +1,13 @@
+"use client"
+
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { assignments } from "../../../../Database";
+
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+  const assignment = assignments.find((a: any) => a._id === aid);
+  
   return (
     <div id="wd-assignments-editor" className="p-3">
       <form>
@@ -8,7 +17,7 @@ export default function AssignmentEditor() {
             id="wd-name"
             type="text"
             className="form-control"
-            defaultValue="A1 - ENV + HTML"
+            defaultValue={assignment?.title || ""}
           />
         </div>
 
@@ -17,7 +26,7 @@ export default function AssignmentEditor() {
             id="wd-description"
             className="form-control"
             rows={5}
-            defaultValue="The assignment is available online. Submit a link to the landing page of your Web application running on Netlify."
+            defaultValue={assignment?.description || ""}
           />
         </div>
 
@@ -26,7 +35,7 @@ export default function AssignmentEditor() {
             Points
           </label>
           <div className="col-sm-10">
-            <input id="wd-points" type="number" className="form-control" defaultValue={100} />
+            <input id="wd-points" type="number" className="form-control" defaultValue={assignment?.points || 100} />
           </div>
         </div>
 
@@ -100,17 +109,32 @@ export default function AssignmentEditor() {
 
               <div className="mb-3">
                 <label htmlFor="wd-due-date" className="form-label">Due</label>
-                <input id="wd-due-date" type="datetime-local" className="form-control" defaultValue="2024-05-13T23:59" />
+                <input
+                  id="wd-due-date"
+                  type="datetime-local"
+                  className="form-control"
+                  defaultValue={assignment?.dueDate || "2024-05-13T23:59"}
+                />
               </div>
 
               <div className="row">
                 <div className="col-md-6">
                   <label htmlFor="wd-available-from" className="form-label">Available from</label>
-                  <input id="wd-available-from" type="datetime-local" className="form-control" defaultValue="2024-05-06T00:00" />
+                  <input
+                    id="wd-available-from"
+                    type="datetime-local"
+                    className="form-control"
+                    defaultValue={assignment?.availableFrom || "2024-05-06T00:00"}
+                  />
                 </div>
                 <div className="col-md-6">
                   <label htmlFor="wd-available-until" className="form-label">Until</label>
-                  <input id="wd-available-until" type="datetime-local" className="form-control" defaultValue="2024-05-20T23:59" />
+                  <input
+                    id="wd-available-until"
+                    type="datetime-local"
+                    className="form-control"
+                    defaultValue={assignment?.availableUntil || "2024-05-20T23:59"}
+                  />
                 </div>
               </div>
             </div>
@@ -119,8 +143,12 @@ export default function AssignmentEditor() {
 
         <hr />
         <div className="d-flex justify-content-end">
-          <button type="button" className="btn btn-secondary me-2">Cancel</button>
-          <button type="button" className="btn btn-danger">Save</button>
+          <Link href={`/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">
+            Cancel
+          </Link>
+          <Link href={`/Courses/${cid}/Assignments`} className="btn btn-danger">
+            Save
+          </Link>
         </div>
       </form>
     </div>
