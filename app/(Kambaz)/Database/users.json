@@ -1,0 +1,72 @@
+[
+  {
+    "_id": "123",
+    "firstName": "Tony",
+    "lastName": "Stark",
+    "loginId": "001234561S",
+    "section": "S101",
+    "role": "STUDENT",
+    "lastActivity": "2020-10-01T00:00:00Z",
+    "totalActivity": "10:21:32"
+  },
+  {
+    "_id": "234",
+    "firstName": "Bruce",
+    "lastName": "Wayne",
+    "loginId": "001234562S",
+    "section": "S101",
+    "role": "STUDENT",
+    "lastActivity": "2020-11-02T00:00:00Z",
+    "totalActivity": "15:32:43"
+  },
+  {
+    "_id": "345",
+    "firstName": "Steve",
+    "lastName": "Rogers",
+    "loginId": "001234563S",
+    "section": "S101",
+    "role": "STUDENT",
+    "lastActivity": "2020-10-02T00:00:00Z",
+    "totalActivity": "23:32:43"
+  },
+  {
+    "_id": "456",
+    "firstName": "Natasha",
+    "lastName": "Romanoff",
+    "loginId": "001234564S",
+    "section": "S101",
+    "role": "TA",
+    "lastActivity": "2020-11-05T00:00:00Z",
+    "totalActivity": "13:23:34"
+  },
+  {
+    "_id": "567",
+    "firstName": "Thor",
+    "lastName": "Odinson",
+    "loginId": "001234565S",
+    "section": "S101",
+    "role": "STUDENT",
+    "lastActivity": "2020-12-01T00:00:00Z",
+    "totalActivity": "11:22:33"
+  },
+  {
+    "_id": "789",
+    "firstName": "Peter",
+    "lastName": "Parker",
+    "loginId": "001234567S",
+    "section": "S102",
+    "role": "STUDENT",
+    "lastActivity": "2020-11-03T00:00:00Z",
+    "totalActivity": "14:45:22"
+  },
+  {
+    "_id": "890",
+    "firstName": "Clark",
+    "lastName": "Kent",
+    "loginId": "001234568S",
+    "section": "S102",
+    "role": "STUDENT",
+    "lastActivity": "2020-11-04T00:00:00Z",
+    "totalActivity": "16:12:55"
+  }
+]
