@@ -1,5 +1,5 @@
 export default function ConditionalOutputIfElse() {
-  let loggedIn = true;
+  const loggedIn = true;
   
   if (loggedIn) {
     return (

@@ -1,5 +1,7 @@
 export default function AddingAndRemovingToFromArrays() {
+  // eslint-disable-next-line prefer-const
   let numberArray1 = [1, 2, 3, 4, 5];
+  // eslint-disable-next-line prefer-const
   let stringArray1 = ["string1", "string2"];
   
   const todoArray = ["Buy milk", "Feed the pets"];
