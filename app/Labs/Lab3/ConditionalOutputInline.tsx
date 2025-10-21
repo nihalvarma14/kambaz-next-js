@@ -1,5 +1,5 @@
 export default function ConditionalOutputInline() {
-  let loggedIn = false;
+  const loggedIn = false;
   
   return (
     <div id="wd-conditional-output-inline">
