@@ -9,7 +9,7 @@ import { assignments } from "../../../Database";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const courseAssignments = assignments.filter((assignment: any) => assignment.course === cid);
+  const courseAssignments = assignments.filter((assignment) => assignment.course === cid);
   
   return (
     <div id="wd-assignments">
@@ -48,7 +48,7 @@ export default function Assignments() {
         </li>
 
         {/* Dynamic Assignments */}
-        {courseAssignments.map((assignment: any) => (
+        {courseAssignments.map((assignment) => (
           <li key={assignment._id} className="wd-assignment-list-item list-group-item p-3 ps-1 border-start border-success border-3">
             <div className="d-flex align-items-start">
               <BsGripVertical className="me-2 fs-3" />
