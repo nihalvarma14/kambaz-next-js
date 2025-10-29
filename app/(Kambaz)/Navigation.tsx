@@ -11,6 +11,7 @@ export default function KambazNavigation() {
   const pathname = usePathname();
   
   const links = [
+    { label: "Account", path: "/Account", icon: FaRegCircleUser },
     { label: "Dashboard", path: "/Dashboard", icon: AiFillDashboard },
     { label: "Courses", path: "/Dashboard", icon: LiaBookSolid },
     { label: "Calendar", path: "/Calendar", icon: IoCalendarOutline },
@@ -19,33 +20,35 @@ export default function KambazNavigation() {
   ];
   
   return (
-    <div id="wd-kambaz-navigation" style={{ width: 120 }}
+    <div id="wd-kambaz-navigation" style={{ width: 90 }}
          className="list-group rounded-0 position-fixed bottom-0 top-0 d-none d-md-block bg-black z-2">
       <a id="wd-neu-link" target="_blank"
          href="https://www.northeastern.edu/"
-         className="list-group-item bg-white border-0 text-center">
-        <img src="/images/NEU.png" width="75px" alt="Northeastern University" />
+         className="list-group-item bg-black border-0 text-center py-3">
+        <img src="/images/NEU.png" width="60px" alt="Northeastern University" />
       </a>
-      
-      <Link href="/Account" id="wd-account-link"
-            className={`list-group-item text-center border-0 ${
-              pathname.includes("Account") ? "bg-white text-danger" : "bg-black text-white"
-            }`}>
-        <FaRegCircleUser className={`fs-1 ${pathname.includes("Account") ? "text-danger" : "text-white"}`} />
-        <br />
-        Account
-      </Link>
       
       {links.map((link) => {
         const Icon = link.icon;
+        const isActive = pathname.includes(link.path) || 
+                        (link.label === "Courses" && pathname.includes("/Courses/"));
+        
         return (
-          <Link key={link.label} href={link.path}
-                className={`list-group-item text-center border-0 ${
-                  pathname.includes(link.label) ? "bg-white text-danger" : "bg-black text-white"
-                }`}>
-            <Icon className="fs-1 text-danger" />
-            <br />
-            {link.label}
+          <Link 
+            key={link.label} 
+            href={link.path}
+            className={`list-group-item text-center border-0 py-3 ${
+              isActive ? "bg-white text-danger" : "bg-black text-white"
+            }`}
+            style={{ 
+              borderLeft: isActive ? "4px solid #dc3545" : "4px solid transparent",
+              transition: "all 0.2s ease"
+            }}
+          >
+            <Icon className={`fs-2 ${isActive ? "text-danger" : "text-white"}`} />
+            <div className="mt-1" style={{ fontSize: "0.75rem" }}>
+              {link.label}
+            </div>
           </Link>
         );
       })}
