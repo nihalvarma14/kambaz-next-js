@@ -7,7 +7,7 @@ export default function TOC() {
   const pathname = usePathname();
   
   return (
-    <ul className="nav nav-pills">
+    <ul className="nav nav-pills flex-column" style={{ width: "200px" }}>
       <li className="nav-item">
         <Link 
           href="/Labs" 
@@ -41,7 +41,15 @@ export default function TOC() {
         </Link>
       </li>
       <li className="nav-item">
-        <Link href="/" className="nav-link">
+        <Link 
+          href="/Labs/Lab4" 
+          className={`nav-link ${pathname.includes("/Labs/Lab4") ? "active" : ""}`}
+        >
+          Lab 4
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link href="/Dashboard" className="nav-link">
           Kambaz
         </Link>
       </li>

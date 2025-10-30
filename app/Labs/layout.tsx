@@ -7,7 +7,7 @@ export default function LabsLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <div className="d-flex">
-      <div className="flex-fill">
+      <div className="me-4">
         <TOC />
       </div>
       <div className="flex-fill">
