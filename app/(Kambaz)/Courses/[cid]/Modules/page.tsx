@@ -9,11 +9,29 @@ import ModuleControlButtons from "./ModuleControlButtons";
 import { addModule, editModule, updateModule, deleteModule } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 
+// Define the Module type
+interface Module {
+  _id: string;
+  name: string;
+  course: string;
+  editing?: boolean;
+}
+
+// Define the Redux state type
+interface RootState {
+  modulesReducer: {
+    modules: Module[];
+  };
+}
+
 export default function Modules() {
-  const { cid } = useParams();
+  const params = useParams();
   const [moduleName, setModuleName] = useState("");
   
-  const { modules } = useSelector((state: any) => state.modulesReducer);
+  // Extract and normalize cid
+  const cid = Array.isArray(params.cid) ? params.cid[0] : params.cid;
+  
+  const { modules } = useSelector((state: RootState) => state.modulesReducer);
   const dispatch = useDispatch();
 
   return (
@@ -22,7 +40,7 @@ export default function Modules() {
         moduleName={moduleName}
         setModuleName={setModuleName}
         addModule={() => {
-          dispatch(addModule({ name: moduleName, course: cid }));
+          dispatch(addModule({ name: moduleName, course: cid || "" }));
           setModuleName("");
         }}
       />
@@ -31,8 +49,8 @@ export default function Modules() {
 
       <ListGroup id="wd-modules" className="rounded-0">
         {modules
-          .filter((module: any) => module.course === cid)
-          .map((module: any) => (
+          .filter((module) => module.course === cid)
+          .map((module) => (
             <ListGroup.Item key={module._id} className="p-0 mb-3 fs-5 border-gray">
               <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center">
                 <BsGripVertical className="me-2 fs-3" />

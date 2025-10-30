@@ -7,17 +7,37 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import * as db from "../../Database";
 
+// Define the User type
+interface User {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  email: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
+
+// Define credentials type (only username and password needed for signin)
+interface Credentials {
+  username: string;
+  password: string;
+}
+
 export default function Signin() {
   // State variable to track user credentials
-  const [credentials, setCredentials] = useState<any>({});
+  const [credentials, setCredentials] = useState<Credentials>({
+    username: "",
+    password: "",
+  });
   const dispatch = useDispatch();
   const router = useRouter();
 
   // Function to sign in the user
   const signin = () => {
     // Search for user with matching credentials
-    const user = db.users.find(
-      (u: any) =>
+    const user = (db.users as User[]).find(
+      (u) =>
         u.username === credentials.username &&
         u.password === credentials.password
     );
@@ -44,7 +64,7 @@ export default function Signin() {
         <div className="mb-3">
           <input
             type="text"
-            value={credentials.username || ""}
+            value={credentials.username}
             onChange={(e) =>
               setCredentials({ ...credentials, username: e.target.value })
             }
@@ -58,7 +78,7 @@ export default function Signin() {
         <div className="mb-3">
           <input
             type="password"
-            value={credentials.password || ""}
+            value={credentials.password}
             onChange={(e) =>
               setCredentials({ ...credentials, password: e.target.value })
             }
@@ -71,7 +91,6 @@ export default function Signin() {
         {/* Sign in button */}
         <button 
           type="submit"
-          onClick={signin} 
           id="wd-signin-btn" 
           className="btn btn-primary w-100 mb-3"
         >
@@ -82,7 +101,7 @@ export default function Signin() {
       {/* Link to sign up page */}
       <div className="text-center">
         <Link id="wd-signup-link" href="/Account/Signup" className="text-decoration-none">
-          Don't have an account? Sign up
+          Dont have an account? Sign up
         </Link>
       </div>
     </div>

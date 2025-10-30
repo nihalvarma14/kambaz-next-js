@@ -7,17 +7,65 @@ import { useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import Breadcrumb from "./Breadcrumb";
 
+// Define the Course type
+interface Course {
+  _id: string;
+  name: string;
+  number: string;
+  startDate: string;
+  endDate: string;
+  department?: string;
+  credits?: number;
+  description?: string;
+}
+
+// Define the User type
+interface User {
+  _id: string;
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  email: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
+
+// Define the Enrollment type
+interface Enrollment {
+  _id: string;
+  user: string;
+  course: string;
+}
+
+// Define the Redux state type
+interface RootState {
+  coursesReducer: {
+    courses: Course[];
+  };
+  accountReducer: {
+    currentUser: User | null;
+  };
+  enrollmentsReducer: {
+    enrollments: Enrollment[];
+  };
+}
+
 export default function CoursesLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const { cid } = useParams();
+  const params = useParams();
   const router = useRouter();
-  const { courses } = useSelector((state: any) => state.coursesReducer);
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
-  const course = courses.find((course: any) => course._id === cid);
+  
+  // Extract and normalize cid
+  const cid = Array.isArray(params.cid) ? params.cid[0] : params.cid;
+  
+  const { courses } = useSelector((state: RootState) => state.coursesReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const { enrollments } = useSelector((state: RootState) => state.enrollmentsReducer);
+  const course = courses.find((course) => course._id === cid);
   const [showNav, setShowNav] = useState(true);
   
   // Route protection - check if user is enrolled
@@ -27,7 +75,7 @@ export default function CoursesLayout({
     
     // Check if user is enrolled in this course
     const isEnrolled = enrollments.some(
-      (e: any) => e.user === currentUser._id && e.course === cid
+      (e) => e.user === currentUser._id && e.course === cid
     );
     
     // If not enrolled, redirect to dashboard

@@ -5,11 +5,37 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 
+// Define the User type
+interface User {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  email: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
+
+// Define the Redux state type (at least the part we're using)
+interface RootState {
+  accountReducer: {
+    currentUser: User | null;
+  };
+}
+
 export default function Profile() {
-  const [profile, setProfile] = useState<any>({});
+  const [profile, setProfile] = useState<User>({
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    dob: "",
+    email: "",
+    role: "USER",
+  });
   const dispatch = useDispatch();
   const router = useRouter();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   
   // Function to fetch and populate profile data
   const fetchProfile = () => {
@@ -114,7 +140,7 @@ export default function Profile() {
               id="wd-role"
               className="form-select"
               value={profile.role || "USER"}
-              onChange={(e) => setProfile({ ...profile, role: e.target.value })}
+              onChange={(e) => setProfile({ ...profile, role: e.target.value as User["role"] })}
             >
               <option value="USER">User</option>
               <option value="ADMIN">Admin</option>

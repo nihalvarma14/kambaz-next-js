@@ -4,10 +4,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { add } from "./addReducer";
 
+// Define the Redux state type
+interface RootState {
+  addReducer: {
+    sum: number;
+  };
+}
+
 export default function AddRedux() {
   const [a, setA] = useState(12);
   const [b, setB] = useState(23);
-  const { sum } = useSelector((state: any) => state.addReducer);
+  const { sum } = useSelector((state: RootState) => state.addReducer);
   const dispatch = useDispatch();
   
   return (
@@ -18,13 +25,13 @@ export default function AddRedux() {
         type="number"
         className="form-control mb-2"
         value={a}
-        onChange={(e) => setA(parseInt(e.target.value))}
+        onChange={(e) => setA(parseInt(e.target.value) || 0)}
       />
       <input
         type="number"
         className="form-control mb-2"
         value={b}
-        onChange={(e) => setB(parseInt(e.target.value))}
+        onChange={(e) => setB(parseInt(e.target.value) || 0)}
       />
       <button
         id="wd-add-redux-click"

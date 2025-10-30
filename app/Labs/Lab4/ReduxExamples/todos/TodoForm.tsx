@@ -3,8 +3,22 @@
 import { useSelector, useDispatch } from "react-redux";
 import { addTodo, updateTodo, setTodo } from "./todosReducer";
 
+// Define the Todo type
+interface Todo {
+  id: string;
+  title: string;
+}
+
+// Define the Redux state type
+interface RootState {
+  todosReducer: {
+    todo: Todo;
+    todos: Todo[];
+  };
+}
+
 export default function TodoForm() {
-  const { todo } = useSelector((state: any) => state.todosReducer);
+  const { todo } = useSelector((state: RootState) => state.todosReducer);
   const dispatch = useDispatch();
   
   return (

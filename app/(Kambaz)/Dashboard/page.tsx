@@ -6,16 +6,60 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
 import { enrollUser, unenrollUser } from "../Enrollments/reducer";
 
+// Define the Course type
+interface Course {
+  _id: string;
+  name: string;
+  number: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  department: string;
+  credits: number;
+}
+
+// Define the User type
+interface User {
+  _id: string;
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  email: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
+
+// Define the Enrollment type
+interface Enrollment {
+  _id: string;
+  user: string;
+  course: string;
+}
+
+// Define the Redux state type
+interface RootState {
+  coursesReducer: {
+    courses: Course[];
+  };
+  accountReducer: {
+    currentUser: User | null;
+  };
+  enrollmentsReducer: {
+    enrollments: Enrollment[];
+  };
+}
+
 export default function Dashboard() {
-  const { courses } = useSelector((state: any) => state.coursesReducer);
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
+  const { courses } = useSelector((state: RootState) => state.coursesReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const { enrollments } = useSelector((state: RootState) => state.enrollmentsReducer);
   const dispatch = useDispatch();
   
   // State to toggle between showing all courses or only enrolled courses
   const [showAllCourses, setShowAllCourses] = useState(false);
   
-  const [course, setCourse] = useState({
+  const [course, setCourse] = useState<Course>({
     _id: "0",
     name: "New Course",
     number: "New Number",
@@ -30,7 +74,7 @@ export default function Dashboard() {
   const isEnrolled = (courseId: string) => {
     if (!currentUser) return false;
     return enrollments.some(
-      (e: any) => e.user === currentUser._id && e.course === courseId
+      (e) => e.user === currentUser._id && e.course === courseId
     );
   };
   
@@ -48,7 +92,7 @@ export default function Dashboard() {
   // Filter courses based on showAllCourses state
   const displayedCourses = showAllCourses
     ? courses
-    : courses.filter((course: any) => !currentUser || isEnrolled(course._id));
+    : courses.filter((course) => !currentUser || isEnrolled(course._id));
   
   return (
     <div id="wd-dashboard">
@@ -101,7 +145,7 @@ export default function Dashboard() {
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {displayedCourses.map((course: any) => (
+          {displayedCourses.map((course) => (
             <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden">
                 <Link

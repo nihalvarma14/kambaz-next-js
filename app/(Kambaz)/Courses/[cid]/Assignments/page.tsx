@@ -8,19 +8,56 @@ import { FaCheckCircle, FaTrash } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteAssignment } from "./reducer";
 
+// Define the Assignment type
+interface Assignment {
+  _id: string;
+  title: string;
+  course: string;
+  description: string;
+  points: number;
+  due: string;
+  dueDate: string;
+  availableFrom: string;
+  availableUntil: string;
+}
+
+// Define the User type
+interface User {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  email: string;
+  role: "USER" | "ADMIN" | "FACULTY" | "STUDENT";
+}
+
+// Define the Redux state type
+interface RootState {
+  assignmentsReducer: {
+    assignments: Assignment[];
+  };
+  accountReducer: {
+    currentUser: User | null;
+  };
+}
+
 export default function Assignments() {
-  const { cid } = useParams();
+  const params = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
   
+  // Extract and normalize cid
+  const cid = Array.isArray(params.cid) ? params.cid[0] : params.cid;
+  
   // Get assignments from Redux store
-  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
   
   // Get current user to check role
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   
   // Filter assignments for this course
-  const courseAssignments = assignments.filter((assignment: any) => assignment.course === cid);
+  const courseAssignments = assignments.filter((assignment) => assignment.course === cid);
   
   // Handle delete with confirmation
   const handleDelete = (assignmentId: string, assignmentTitle: string) => {
@@ -73,7 +110,7 @@ export default function Assignments() {
         </li>
 
         {/* Dynamic Assignments */}
-        {courseAssignments.map((assignment: any) => (
+        {courseAssignments.map((assignment) => (
           <li key={assignment._id} className="wd-assignment-list-item list-group-item p-3 ps-1 border-start border-success border-3">
             <div className="d-flex align-items-start">
               <BsGripVertical className="me-2 fs-3" />
