@@ -2,12 +2,20 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { modules } from "../../../Database";
 import { v4 as uuidv4 } from "uuid";
 
+// Define the Lesson type (adjust properties based on your actual lesson structure)
+interface Lesson {
+  _id: string;
+  name: string;
+  description?: string;
+  module: string;
+}
+
 // Define the Module type
 interface Module {
   _id: string;
   name: string;
   course: string;
-  lessons?: any[]; // You can define a Lesson type if needed
+  lessons?: Lesson[];
   editing?: boolean;
 }
 
