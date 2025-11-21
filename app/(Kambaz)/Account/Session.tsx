@@ -1,10 +1,10 @@
 "use client";
 import * as client from "./client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { setCurrentUser } from "./reducer";
 import { useDispatch } from "react-redux";
 
-export default function Session({ children }: { children: any }) {
+export default function Session({ children }: { children: ReactNode }) {
   const [pending, setPending] = useState(true);
   const dispatch = useDispatch();
   
@@ -24,7 +24,7 @@ export default function Session({ children }: { children: any }) {
           dispatch(setCurrentUser(user));
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       // If server request fails, try localStorage
       const stored = localStorage.getItem('currentUser');
       if (stored) {
