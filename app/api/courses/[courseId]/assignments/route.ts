@@ -16,8 +16,8 @@ export async function GET(
     await connectDB();
     const { courseId } = await params;
     const db = mongoose.connection.db;
-    const collection = db?.collection('assignments') as any;
-    const assignments = await collection.find({ course: courseId }).toArray();
+    const collection = db?.collection('assignments');
+    const assignments = await collection?.find({ course: courseId }).toArray();
     return NextResponse.json(assignments);
   } catch (error: unknown) {
     const err = error as Error;
@@ -41,8 +41,8 @@ export async function POST(
     }
     
     const db = mongoose.connection.db;
-    const collection = db?.collection('assignments') as any;
-    await collection.insertOne(assignment);
+    const collection = db?.collection('assignments');
+    await collection?.insertOne(assignment);
     
     return NextResponse.json(assignment, { status: 201 });
   } catch (error: unknown) {

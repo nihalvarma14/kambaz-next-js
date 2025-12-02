@@ -5,14 +5,28 @@ import { FaPlus } from "react-icons/fa";
 import PeopleTable from "../../Courses/[cid]/People/Table/page";
 import * as client from "../client";
 
+interface User {
+  _id?: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  email: string;
+  role: string;
+  section: string;
+  loginId: string;
+  lastActivity: string;
+  totalActivity: string;
+}
+
 export default function Users() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [role, setRole] = useState<string>("");
   const [name, setName] = useState<string>("");
 
   const filterUsersByRole = async (selectedRole: string) => {
     setRole(selectedRole);
-    setName(""); // Clear name filter
+    setName("");
     if (selectedRole) {
       const users = await client.findUsersByRole(selectedRole);
       setUsers(users);
@@ -23,7 +37,7 @@ export default function Users() {
 
   const filterUsersByName = async (searchName: string) => {
     setName(searchName);
-    setRole(""); // Clear role filter
+    setRole("");
     if (searchName) {
       const users = await client.findUsersByPartialName(searchName);
       setUsers(users);

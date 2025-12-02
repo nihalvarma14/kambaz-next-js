@@ -16,8 +16,8 @@ export async function GET(
     await connectDB();
     const { courseId } = await params;
     const db = mongoose.connection.db;
-    const collection = db?.collection('enrollments') as any;
-    const enrollments = await collection.find({ course: courseId }).toArray();
+    const collection = db?.collection('enrollments');
+    const enrollments = await collection?.find({ course: courseId }).toArray();
     return NextResponse.json(enrollments);
   } catch (error: unknown) {
     const err = error as Error;
