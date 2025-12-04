@@ -9,6 +9,11 @@ export default function AccountNavigation() {
   const pathname = usePathname();
   
   const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
+  
+  // Add Users link for ADMIN users
+  if (currentUser && currentUser.role === "ADMIN") {
+    links.push("Users");
+  }
 
   return (
     <div id="wd-account-navigation" className="wd list-group fs-5 rounded-0">

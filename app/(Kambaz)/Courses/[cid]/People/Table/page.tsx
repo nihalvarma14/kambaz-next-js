@@ -6,6 +6,8 @@ import * as client from "../../../../Account/client";
 import * as enrollmentsClient from "../../../../Account/enrollmentsClient";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import { FaUserCircle, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import PeopleDetails from "../Details";
+import Link from "next/link";
 
 interface User {
   _id?: string;
@@ -27,13 +29,19 @@ interface RootState {
   };
 }
 
-export default function PeopleTable() {
+interface PeopleTableProps {
+  users?: User[];
+  fetchUsers?: () => void;
+}
+
+export default function PeopleTable({ users: propUsers, fetchUsers: propFetchUsers }: PeopleTableProps) {
   const { cid } = useParams();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>(propUsers || []);
   const [enrolledUsers, setEnrolledUsers] = useState<User[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [showDetailsId, setShowDetailsId] = useState<string | null>(null);
   const [userForm, setUserForm] = useState<User>({
     firstName: "",
     lastName: "",
@@ -70,13 +78,23 @@ export default function PeopleTable() {
     }
   };
 
+  // Use prop users if provided, otherwise fetch
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (propUsers) {
+      setUsers(propUsers);
+    } else {
+      fetchUsers();
+    }
+  }, [propUsers]);
 
   useEffect(() => {
     if (users.length > 0) {
-      fetchEnrolledUsers();
+      // If cid exists, filter by enrollments, otherwise show all users
+      if (cid) {
+        fetchEnrolledUsers();
+      } else {
+        setEnrolledUsers(users);
+      }
     }
   }, [users, cid]);
 
@@ -122,7 +140,14 @@ export default function PeopleTable() {
           await enrollmentsClient.enrollUserInCourse(newUser._id, cid as string);
         }
       }
-      fetchUsers();
+      
+      // Call the appropriate fetch function
+      if (propFetchUsers) {
+        propFetchUsers();
+      } else {
+        fetchUsers();
+      }
+      
       handleCloseModal();
     } catch (error) {
       console.error("Error saving user:", error);
@@ -133,7 +158,13 @@ export default function PeopleTable() {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await client.deleteUser(userId);
-        fetchUsers();
+        
+        // Call the appropriate fetch function
+        if (propFetchUsers) {
+          propFetchUsers();
+        } else {
+          fetchUsers();
+        }
       } catch (error) {
         console.error("Error deleting user:", error);
       }
@@ -141,10 +172,11 @@ export default function PeopleTable() {
   };
 
   const isFaculty = currentUser?.role === "FACULTY";
+  const isAdmin = currentUser?.role === "ADMIN";
 
   return (
     <div id="wd-people-table">
-      {isFaculty && (
+      {(isFaculty || isAdmin) && (
         <div className="mb-3">
           <Button variant="success" onClick={() => handleShowModal()}>
             <FaPlus className="me-2" />
@@ -162,7 +194,7 @@ export default function PeopleTable() {
             <th>Role</th>
             <th>Last Activity</th>
             <th>Total Activity</th>
-            {isFaculty && <th>Actions</th>}
+            {(isFaculty || isAdmin) && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -170,15 +202,24 @@ export default function PeopleTable() {
             <tr key={user._id}>
               <td className="wd-full-name text-nowrap">
                 <FaUserCircle className="me-2 fs-1 text-secondary" />
-                <span className="wd-first-name">{user.firstName}</span>{" "}
-                <span className="wd-last-name">{user.lastName}</span>
+                <Link
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowDetailsId(user._id || null);
+                  }}
+                  className="text-danger text-decoration-none"
+                >
+                  <span className="wd-first-name">{user.firstName}</span>{" "}
+                  <span className="wd-last-name">{user.lastName}</span>
+                </Link>
               </td>
               <td className="wd-login-id">{user.loginId}</td>
               <td className="wd-section">{user.section}</td>
               <td className="wd-role">{user.role}</td>
               <td className="wd-last-activity">{user.lastActivity}</td>
               <td className="wd-total-activity">{user.totalActivity}</td>
-              {isFaculty && (
+              {(isFaculty || isAdmin) && (
                 <td>
                   <Button
                     variant="warning"
@@ -276,6 +317,7 @@ export default function PeopleTable() {
                 <option value="STUDENT">Student</option>
                 <option value="FACULTY">Faculty</option>
                 <option value="TA">TA</option>
+                <option value="ADMIN">Admin</option>
               </Form.Select>
             </Form.Group>
 
@@ -311,6 +353,13 @@ export default function PeopleTable() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* People Details Dialog */}
+      <PeopleDetails
+        uid={showDetailsId}
+        onClose={() => setShowDetailsId(null)}
+        fetchUsers={propFetchUsers || fetchUsers}
+      />
     </div>
   );
 }
