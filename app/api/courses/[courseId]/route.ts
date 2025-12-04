@@ -7,6 +7,11 @@ async function connectDB() {
   }
 }
 
+interface CourseDocument {
+  _id: string;
+  [key: string]: unknown;
+}
+
 // GET course by ID
 export async function GET(
   request: NextRequest,
@@ -16,8 +21,8 @@ export async function GET(
     await connectDB();
     const { courseId } = await params;
     const db = mongoose.connection.db;
-    const collection = db?.collection('courses') as any;
-    const course = await collection.findOne({ _id: courseId });
+    const collection = db?.collection<CourseDocument>('courses');
+    const course = await collection?.findOne({ _id: courseId });
     
     if (!course) {
       return NextResponse.json({ error: 'Course not found' }, { status: 404 });
@@ -40,8 +45,8 @@ export async function PUT(
     const updates = await request.json();
     const db = mongoose.connection.db;
     
-    const collection = db?.collection('courses') as any;
-    const result = await collection.findOneAndUpdate(
+    const collection = db?.collection<CourseDocument>('courses');
+    const result = await collection?.findOneAndUpdate(
       { _id: courseId },
       { $set: updates },
       { returnDocument: 'after' }
@@ -67,8 +72,8 @@ export async function DELETE(
     const { courseId } = await params;
     const db = mongoose.connection.db;
     
-    const collection = db?.collection('courses') as any;
-    const result = await collection.deleteOne({ _id: courseId });
+    const collection = db?.collection<CourseDocument>('courses');
+    const result = await collection?.deleteOne({ _id: courseId });
     
     if (result?.deletedCount === 0) {
       return NextResponse.json({ error: 'Course not found' }, { status: 404 });

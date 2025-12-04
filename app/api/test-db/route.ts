@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 
+interface UserDocument {
+  _id: string;
+  [key: string]: unknown;
+}
+
 export async function GET() {
   try {
     const connectionString = 'mongodb://127.0.0.1:27017/kambaz';
@@ -12,7 +17,7 @@ export async function GET() {
     
     // Get the users collection directly
     const db = mongoose.connection.db;
-    const usersCollection = db?.collection('users');
+    const usersCollection = db?.collection<UserDocument>('users');
     const users = await usersCollection?.find({}).limit(3).toArray();
     
     return NextResponse.json({ 
@@ -21,11 +26,12 @@ export async function GET() {
       userCount: users?.length || 0,
       users: users
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error;
     return NextResponse.json({ 
       success: false, 
-      error: error.message,
-      stack: error.stack
+      error: err.message,
+      stack: err.stack
     }, { status: 500 });
   }
 }

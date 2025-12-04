@@ -7,13 +7,18 @@ async function connectDB() {
   }
 }
 
+interface CourseDocument {
+  _id: string;
+  [key: string]: unknown;
+}
+
 // GET all courses
 export async function GET() {
   try {
     await connectDB();
     const db = mongoose.connection.db;
-    const collection = db?.collection('courses') as any;
-    const courses = await collection.find({}).toArray();
+    const collection = db?.collection<CourseDocument>('courses');
+    const courses = await collection?.find({}).toArray();
     return NextResponse.json(courses);
   } catch (error: unknown) {
     const err = error as Error;
@@ -33,8 +38,8 @@ export async function POST(request: NextRequest) {
     }
 
     const db = mongoose.connection.db;
-    const collection = db?.collection('courses') as any;
-    await collection.insertOne(course);
+    const collection = db?.collection<CourseDocument>('courses');
+    await collection?.insertOne(course as CourseDocument);
     
     return NextResponse.json(course, { status: 201 });
   } catch (error: unknown) {

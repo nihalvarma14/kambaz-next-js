@@ -7,6 +7,12 @@ async function connectDB() {
   }
 }
 
+interface EnrollmentDocument {
+  _id: string;
+  user: string;
+  course: string;
+}
+
 // POST - Enroll user in course
 export async function POST(
   request: NextRequest,
@@ -17,22 +23,22 @@ export async function POST(
     const { userId, courseId } = await params;
     
     const db = mongoose.connection.db;
-    const collection = db?.collection('enrollments') as any;
+    const collection = db?.collection<EnrollmentDocument>('enrollments');
     
     // Check if already enrolled
-    const existing = await collection.findOne({ user: userId, course: courseId });
+    const existing = await collection?.findOne({ user: userId, course: courseId });
     if (existing) {
       return NextResponse.json({ message: 'Already enrolled' }, { status: 200 });
     }
     
     // Create enrollment
-    const enrollment = {
+    const enrollment: EnrollmentDocument = {
       _id: `${userId}-${courseId}`,
       user: userId,
       course: courseId,
     };
     
-    await collection.insertOne(enrollment);
+    await collection?.insertOne(enrollment);
     return NextResponse.json(enrollment, { status: 201 });
   } catch (error: unknown) {
     const err = error as Error;
@@ -50,9 +56,9 @@ export async function DELETE(
     const { userId, courseId } = await params;
     
     const db = mongoose.connection.db;
-    const collection = db?.collection('enrollments') as any;
+    const collection = db?.collection<EnrollmentDocument>('enrollments');
     
-    const result = await collection.deleteOne({ user: userId, course: courseId });
+    const result = await collection?.deleteOne({ user: userId, course: courseId });
     
     if (result?.deletedCount === 0) {
       return NextResponse.json({ error: 'Enrollment not found' }, { status: 404 });

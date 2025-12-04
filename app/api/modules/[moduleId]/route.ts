@@ -7,6 +7,11 @@ async function connectDB() {
   }
 }
 
+interface ModuleDocument {
+  _id: string;
+  [key: string]: unknown;
+}
+
 // GET module by ID
 export async function GET(
   request: NextRequest,
@@ -16,8 +21,8 @@ export async function GET(
     await connectDB();
     const { moduleId } = await params;
     const db = mongoose.connection.db;
-    const collection = db?.collection('modules') as any;
-    const module = await collection.findOne({ _id: moduleId });
+    const collection = db?.collection<ModuleDocument>('modules');
+    const module = await collection?.findOne({ _id: moduleId });
     
     if (!module) {
       return NextResponse.json({ error: 'Module not found' }, { status: 404 });
@@ -40,8 +45,8 @@ export async function PUT(
     const updates = await request.json();
     const db = mongoose.connection.db;
     
-    const collection = db?.collection('modules') as any;
-    const result = await collection.findOneAndUpdate(
+    const collection = db?.collection<ModuleDocument>('modules');
+    const result = await collection?.findOneAndUpdate(
       { _id: moduleId },
       { $set: updates },
       { returnDocument: 'after' }
@@ -67,8 +72,8 @@ export async function DELETE(
     const { moduleId } = await params;
     const db = mongoose.connection.db;
     
-    const collection = db?.collection('modules') as any;
-    const result = await collection.deleteOne({ _id: moduleId });
+    const collection = db?.collection<ModuleDocument>('modules');
+    const result = await collection?.deleteOne({ _id: moduleId });
     
     if (result?.deletedCount === 0) {
       return NextResponse.json({ error: 'Module not found' }, { status: 404 });

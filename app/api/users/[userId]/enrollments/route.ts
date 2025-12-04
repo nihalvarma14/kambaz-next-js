@@ -7,6 +7,12 @@ async function connectDB() {
   }
 }
 
+interface EnrollmentDocument {
+  _id: string;
+  user: string;
+  course: string;
+}
+
 // GET enrollments for a user
 export async function GET(
   request: NextRequest,
@@ -16,8 +22,8 @@ export async function GET(
     await connectDB();
     const { userId } = await params;
     const db = mongoose.connection.db;
-    const collection = db?.collection('enrollments') as any;
-    const enrollments = await collection.find({ user: userId }).toArray();
+    const collection = db?.collection<EnrollmentDocument>('enrollments');
+    const enrollments = await collection?.find({ user: userId }).toArray();
     return NextResponse.json(enrollments);
   } catch (error: unknown) {
     const err = error as Error;

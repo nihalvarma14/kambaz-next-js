@@ -7,6 +7,12 @@ async function connectDB() {
   }
 }
 
+interface ModuleDocument {
+  _id: string;
+  course: string;
+  [key: string]: unknown;
+}
+
 // GET all modules for a course
 export async function GET(
   request: NextRequest,
@@ -16,8 +22,8 @@ export async function GET(
     await connectDB();
     const { courseId } = await params;
     const db = mongoose.connection.db;
-    const collection = db?.collection('modules') as any;
-    const modules = await collection.find({ course: courseId }).toArray();
+    const collection = db?.collection<ModuleDocument>('modules');
+    const modules = await collection?.find({ course: courseId }).toArray();
     return NextResponse.json(modules);
   } catch (error: unknown) {
     const err = error as Error;
@@ -42,8 +48,8 @@ export async function POST(
     }
 
     const db = mongoose.connection.db;
-    const collection = db?.collection('modules') as any;
-    await collection.insertOne(module);
+    const collection = db?.collection<ModuleDocument>('modules');
+    await collection?.insertOne(module as ModuleDocument);
     
     return NextResponse.json(module, { status: 201 });
   } catch (error: unknown) {
