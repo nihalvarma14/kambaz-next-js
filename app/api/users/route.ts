@@ -7,35 +7,37 @@ async function connectDB() {
   }
 }
 
+interface UserFilter {
+  role?: string;
+  $or?: Array<{ firstName: { $regex: RegExp } } | { lastName: { $regex: RegExp } }>;
+}
+
 // GET all users or filter by role/name
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
     const db = mongoose.connection.db;
-    const collection = db?.collection('users') as any;
+    const collection = db?.collection('users');
 
-    // Get query parameters
     const { searchParams } = new URL(request.url);
     const role = searchParams.get('role');
     const name = searchParams.get('name');
 
-    let filter: any = {};
+    const filter: UserFilter = {};
 
-    // Filter by role
     if (role) {
       filter.role = role;
     }
 
-    // Filter by name (case-insensitive partial match)
     if (name) {
-      const regex = new RegExp(name, 'i'); // 'i' makes it case-insensitive
+      const regex = new RegExp(name, 'i');
       filter.$or = [
         { firstName: { $regex: regex } },
         { lastName: { $regex: regex } }
       ];
     }
 
-    const users = await collection.find(filter).toArray();
+    const users = await collection?.find(filter).toArray();
     return NextResponse.json(users);
   } catch (error: unknown) {
     const err = error as Error;
@@ -49,14 +51,13 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const user = await request.json();
     
-    // Generate new user ID if not provided
     if (!user._id) {
       user._id = new Date().getTime().toString();
     }
 
     const db = mongoose.connection.db;
-    const collection = db?.collection('users') as any;
-    await collection.insertOne(user);
+    const collection = db?.collection('users');
+    await collection?.insertOne(user);
     
     return NextResponse.json(user, { status: 201 });
   } catch (error: unknown) {

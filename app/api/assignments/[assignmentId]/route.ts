@@ -16,8 +16,8 @@ export async function GET(
     await connectDB();
     const { assignmentId } = await params;
     const db = mongoose.connection.db;
-    const collection = db?.collection('assignments') as any;
-    const assignment = await collection.findOne({ _id: assignmentId });
+    const collection = db?.collection('assignments');
+    const assignment = await collection?.findOne({ _id: assignmentId } as never);
     
     if (!assignment) {
       return NextResponse.json({ error: 'Assignment not found' }, { status: 404 });
@@ -40,9 +40,9 @@ export async function PUT(
     const updates = await request.json();
     const db = mongoose.connection.db;
     
-    const collection = db?.collection('assignments') as any;
-    const result = await collection.findOneAndUpdate(
-      { _id: assignmentId },
+    const collection = db?.collection('assignments');
+    const result = await collection?.findOneAndUpdate(
+      { _id: assignmentId } as never,
       { $set: updates },
       { returnDocument: 'after' }
     );
@@ -67,8 +67,8 @@ export async function DELETE(
     const { assignmentId } = await params;
     const db = mongoose.connection.db;
     
-    const collection = db?.collection('assignments') as any;
-    const result = await collection.deleteOne({ _id: assignmentId });
+    const collection = db?.collection('assignments');
+    const result = await collection?.deleteOne({ _id: assignmentId } as never);
     
     if (result?.deletedCount === 0) {
       return NextResponse.json({ error: 'Assignment not found' }, { status: 404 });

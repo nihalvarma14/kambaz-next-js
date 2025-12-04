@@ -8,6 +8,17 @@ async function connectDB() {
   }
 }
 
+interface CourseDocument {
+  _id: string;
+  [key: string]: unknown;
+}
+
+interface EnrollmentDocument {
+  _id: string;
+  user: string;
+  course: string;
+}
+
 // GET current user's courses
 export async function GET(request: NextRequest) {
   try {
@@ -24,16 +35,13 @@ export async function GET(request: NextRequest) {
     await connectDB();
     const db = mongoose.connection.db;
 
-    // Get user's enrollments
-    const enrollmentsCollection = db?.collection('enrollments') as any;
-    const enrollments = await enrollmentsCollection.find({ user: user._id }).toArray();
+    const enrollmentsCollection = db?.collection<EnrollmentDocument>('enrollments');
+    const enrollments = await enrollmentsCollection?.find({ user: user._id }).toArray();
 
-    // Get course IDs from enrollments
-    const courseIds = enrollments.map((e: any) => e.course);
+    const courseIds = enrollments?.map((e) => e.course) || [];
 
-    // Get courses
-    const coursesCollection = db?.collection('courses') as any;
-    const courses = await coursesCollection.find({ _id: { $in: courseIds } }).toArray();
+    const coursesCollection = db?.collection<CourseDocument>('courses');
+    const courses = await coursesCollection?.find({ _id: { $in: courseIds } }).toArray();
 
     return NextResponse.json(courses);
   } catch (error: unknown) {
@@ -58,20 +66,20 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const course = await request.json();
 
-    // Generate new course ID
-    course._id = new Date().getTime().toString();
+    const courseId = new Date().getTime().toString();
+    course._id = courseId;
 
     const db = mongoose.connection.db;
-    const coursesCollection = db?.collection('courses') as any;
-    await coursesCollection.insertOne(course);
+    const coursesCollection = db?.collection<CourseDocument>('courses');
+    await coursesCollection?.insertOne(course as CourseDocument);
 
-    // Auto-enroll the user in the course
-    const enrollmentsCollection = db?.collection('enrollments') as any;
-    await enrollmentsCollection.insertOne({
-      _id: `${user._id}-${course._id}`,
+    const enrollmentsCollection = db?.collection<EnrollmentDocument>('enrollments');
+    const enrollmentDoc: EnrollmentDocument = {
+      _id: `${user._id}-${courseId}`,
       user: user._id,
-      course: course._id,
-    });
+      course: courseId,
+    };
+    await enrollmentsCollection?.insertOne(enrollmentDoc);
 
     return NextResponse.json(course, { status: 201 });
   } catch (error: unknown) {

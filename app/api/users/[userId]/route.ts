@@ -16,8 +16,8 @@ export async function GET(
     await connectDB();
     const { userId } = await params;
     const db = mongoose.connection.db;
-    const collection = db?.collection('users') as any;
-    const user = await collection.findOne({ _id: userId });
+    const collection = db?.collection('users');
+    const user = await collection?.findOne({ _id: userId } as never);
     
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -40,9 +40,9 @@ export async function PUT(
     const updates = await request.json();
     const db = mongoose.connection.db;
     
-    const collection = db?.collection('users') as any;
-    const result = await collection.findOneAndUpdate(
-      { _id: userId },
+    const collection = db?.collection('users');
+    const result = await collection?.findOneAndUpdate(
+      { _id: userId } as never,
       { $set: updates },
       { returnDocument: 'after' }
     );
@@ -67,8 +67,8 @@ export async function DELETE(
     const { userId } = await params;
     const db = mongoose.connection.db;
     
-    const collection = db?.collection('users') as any;
-    const result = await collection.deleteOne({ _id: userId });
+    const collection = db?.collection('users');
+    const result = await collection?.deleteOne({ _id: userId } as never);
     
     if (result?.deletedCount === 0) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
