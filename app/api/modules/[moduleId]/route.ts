@@ -22,12 +22,12 @@ export async function GET(
     const { moduleId } = await params;
     const db = mongoose.connection.db;
     const collection = db?.collection<ModuleDocument>('modules');
-    const module = await collection?.findOne({ _id: moduleId });
+    const moduleData = await collection?.findOne({ _id: moduleId });
     
-    if (!module) {
+    if (!moduleData) {
       return NextResponse.json({ error: 'Module not found' }, { status: 404 });
     }
-    return NextResponse.json(module);
+    return NextResponse.json(moduleData);
   } catch (error: unknown) {
     const err = error as Error;
     return NextResponse.json({ error: err.message }, { status: 500 });

@@ -39,19 +39,19 @@ export async function POST(
   try {
     await connectDB();
     const { courseId } = await params;
-    const module = await request.json();
+    const moduleData = await request.json();
     
     // Set course ID and generate module ID
-    module.course = courseId;
-    if (!module._id) {
-      module._id = new Date().getTime().toString();
+    moduleData.course = courseId;
+    if (!moduleData._id) {
+      moduleData._id = new Date().getTime().toString();
     }
 
     const db = mongoose.connection.db;
     const collection = db?.collection<ModuleDocument>('modules');
-    await collection?.insertOne(module as ModuleDocument);
+    await collection?.insertOne(moduleData as ModuleDocument);
     
-    return NextResponse.json(module, { status: 201 });
+    return NextResponse.json(moduleData, { status: 201 });
   } catch (error: unknown) {
     const err = error as Error;
     return NextResponse.json({ error: err.message }, { status: 500 });
