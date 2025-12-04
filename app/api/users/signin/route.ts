@@ -8,6 +8,16 @@ async function connectDB() {
   }
 }
 
+interface UserDocument {
+  _id: string;
+  username: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
@@ -15,8 +25,8 @@ export async function POST(request: NextRequest) {
     const { username, password } = credentials;
 
     const db = mongoose.connection.db;
-    const collection = db?.collection('users');
-    const user = await collection?.findOne({ username, password } as never);
+    const collection = db?.collection<UserDocument>('users');
+    const user = await collection?.findOne({ username, password });
 
     if (!user) {
       return NextResponse.json(
@@ -25,7 +35,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const sessionId = createSession(user._id, {
+    const sessionId = createSession(user._id as string, {
       _id: user._id,
       username: user.username,
       firstName: user.firstName,
